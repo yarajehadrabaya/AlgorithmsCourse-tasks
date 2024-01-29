@@ -1,0 +1,278 @@
+#include<bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+#define VAMOOOS ios_base::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL)
+void swap(vector<int>& arr, int i, int j) {
+    int temp = arr[i];
+    arr[i] = arr[j];
+    arr[j] = temp;
+}
+
+
+int partition(vector<int>& arr, int low, int high) {
+    int pivot = arr[high];
+    int i = low - 1;
+
+
+    for (int j = low; j <= high - 1; j++) {
+        if (arr[j] <= pivot) {
+            i++;
+            swap(arr, i, j);
+        }
+    }
+
+
+    swap(arr, i + 1, high);
+    return i + 1;
+}
+
+
+void quickSort(vector<int>& arr) {
+    int n = arr.size();
+
+
+    stack<pair<int, int>> st;
+    st.push(make_pair(0, n - 1));
+
+
+    while (!st.empty()) {
+        int low = st.top().first;
+        int high = st.top().second;
+        st.pop();
+
+
+        int pivotIndex = partition(arr, low, high);
+
+
+        if (pivotIndex - 1 > low)
+            st.push(make_pair(low, pivotIndex - 1));
+
+
+        if (pivotIndex + 1 < high)
+            st.push(make_pair(pivotIndex + 1, high));
+    }
+}
+
+
+void merge(vector<int>& arr, int left, int mid, int right) {
+    int n1 = mid - left + 1;
+    int n2 = right - mid;
+
+
+    vector<int> leftArr(n1);
+    vector<int> rightArr(n2);
+
+
+    for (int i = 0; i < n1; i++)
+        leftArr[i] = arr[left + i];
+    for (int j = 0; j < n2; j++)
+        rightArr[j] = arr[mid + 1 + j];
+
+
+    int i = 0, j = 0, k = left;
+
+
+    while (i < n1 && j < n2) {
+        if (leftArr[i] <= rightArr[j]) {
+            arr[k] = leftArr[i];
+            i++;
+        } else {
+            arr[k] = rightArr[j];
+            j++;
+        }
+        k++;
+    }
+
+
+    while (i < n1) {
+        arr[k] = leftArr[i];
+        i++;
+        k++;
+    }
+
+
+    while (j < n2) {
+        arr[k] = rightArr[j];
+        j++;
+        k++;
+    }
+}
+
+
+void mergeSort(vector<int>& arr) {
+    int n = arr.size();
+    int currSize;
+    int leftStart;
+
+
+    for (currSize = 1; currSize < n; currSize *= 2) {
+        for (leftStart = 0; leftStart < n - 1; leftStart += 2 * currSize) {
+            int mid = min(leftStart + currSize - 1, n - 1);
+            int rightEnd = min(leftStart + 2 * currSize - 1, n - 1);
+
+
+            merge(arr, leftStart, mid, rightEnd);
+        }
+    }
+}
+
+
+
+
+void bubbleSort(vector<int>& arr) {
+    int n = arr.size();
+
+
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = 0; j < n - i - 1; j++) {
+            if (arr[j] > arr[j + 1]) {
+                int temp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = temp;
+            }
+        }
+    }
+}
+
+
+void insertionSort(vector<int>& arr) {
+    int n = arr.size();
+
+
+    for (int i = 1; i < n; i++) {
+        int key = arr[i];
+        int j = i - 1;
+
+
+        while (j >= 0 && arr[j] > key) {
+            arr[j + 1] = arr[j];
+            j--;
+        }
+
+
+        arr[j + 1] = key;
+    }
+}
+
+
+
+
+void selectionSort(vector<int>& arr) {
+    int n = arr.size();
+
+
+    for (int i = 0; i < n - 1; i++) {
+        int minIndex = i;
+
+
+        for (int j = i + 1; j < n; j++) {
+            if (arr[j] < arr[minIndex]) {
+                minIndex = j;
+            }
+        }
+        int temp = arr[i];
+        arr[i] = arr[minIndex];
+        arr[minIndex] = temp;
+    }
+}
+main() {
+    VAMOOOS;
+    ll n =1000;
+    vector<int> arr(n),arr1(n),arr2(n),arr3(n),arr4(n);
+    for (int i=0;i<n;i++)// Random Data from 1 to 5000 In The Vector
+    {
+        arr[i]=arr1[i]=arr2[i]=arr3[i]=arr4[i]= rand()%5000;
+    }
+    for (int i=0;i<n;i++) // Sorted Data In The Vector
+    {
+        arr[i]=arr1[i]=arr2[i]=arr3[i]=arr4[i]=i;
+    }
+
+
+
+
+    int x=n;
+     for (int i=0;i<n;i++) // Sorted Data ( Reversely  ) In The Vector
+    {
+        arr[i]=arr1[i]=arr2[i]=arr3[i]=arr4[i]=x--;
+    }
+
+
+
+
+    {
+    time_t start, end;
+    time(&start);
+    ios_base::sync_with_stdio(false);
+    quickSort(arr);
+    time(&end);
+    double time_taken = double(end - start);
+    cout << "Time taken by Quick Sort is : " << fixed
+        << time_taken << setprecision(7);
+    cout << " sec " << endl;
+    }
+
+
+    {
+        time_t start, end;
+    time(&start);
+    ios_base::sync_with_stdio(false);
+       mergeSort(arr1);
+    time(&end);
+    double time_taken = double(end - start);
+    cout << "Time taken by Merge Sort is : " << fixed
+        << time_taken << setprecision(7);
+    cout << " sec " << endl;
+    }
+
+
+    {
+        time_t start, end;
+    time(&start);
+    ios_base::sync_with_stdio(false);
+    bubbleSort(arr2);
+    time(&end);
+    double time_taken = double(end - start);
+    cout << "Time taken by Bubble Sort is : " << fixed
+        << time_taken << setprecision(7);
+    cout << " sec " << endl;
+    }
+
+
+
+
+
+
+
+
+    {
+        time_t start, end;
+    time(&start);
+    ios_base::sync_with_stdio(false);
+    insertionSort(arr3);
+    time(&end);
+    double time_taken = double(end - start);
+    cout << "Time taken by Insertion Sort is : " << fixed
+        << time_taken << setprecision(7);
+    cout << " sec " << endl;
+    }
+
+
+    {
+        time_t start, end;
+    time(&start);
+    ios_base::sync_with_stdio(false);
+      selectionSort(arr4);
+
+
+    time(&end);
+    double time_taken = double(end - start);
+    cout << "Time taken by Selection Sort is : " << fixed
+        << time_taken << setprecision(7);
+    cout << " sec " << endl;
+    }
+
+
+}
+
+
